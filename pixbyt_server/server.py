@@ -23,16 +23,21 @@ async def meltano(*args, env = {}, **kwargs):
     )
 
 async def run_scheduler(_app):
-    logger.info(f"Running scheduler")
+    logger.info(f"Starting scheduler")
     process = await meltano("invoke", "airflow", "scheduler")
+
+    returncode = await process.wait()
+    logger.info(f"Scheduler exited with code {returncode}")
+
+    if returncode != 0:
+        raise Exception(f"Scheduler exited with code {returncode}")
 
     yield
 
-    # TODO: Die if Airflow scheduler failed?
-
     if process.returncode is None:
+        logger.info("Stopping scheduler")
         process.terminate()
-    await process.wait()
+        await process
 
 async def run_app(name, input="", env={}):
     # TODO: Logs. Call via Airflow? (Not all apps may have a schedule/DAG) May help with retries
