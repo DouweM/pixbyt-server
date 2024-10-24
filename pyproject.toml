@@ -7,7 +7,7 @@ authors = ["Douwe Maan"]
 packages = [{ include = "pixbyt_server" }]
 
 [tool.poetry.dependencies]
-python = "<3.12,>=3.7.1"
+python = ">=3.7.1"
 aiohttp = "^3.0"
 aiohttp_basicauth = "^1.0.0"
 
